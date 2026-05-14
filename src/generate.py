@@ -13,7 +13,6 @@ class Repository(TypedDict):
     description: str
     url: str
     repositoryTopics: list[dict[str, str]] | None
-    stargazerCount: int
 
 
 class Category(TypedDict):

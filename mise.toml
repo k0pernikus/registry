@@ -16,7 +16,7 @@ run = "uv sync"
 [tasks.fetch]
 description = "Fetch GitHub repositories data"
 depends = ["sync"]
-run = "gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json"
+run = "gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics --limit 1000 > repos.json"
 
 [tasks.render]
 description = "Render the README.md and index.html"

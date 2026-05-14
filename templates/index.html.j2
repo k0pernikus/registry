@@ -20,15 +20,13 @@
       font-family: '0xProto Nerd Font', monospace !important;
     }
 
-    /* Dark Mode Overrides (Retro Terminal) */
     body.dark {
       --docsify-darklight-theme-background: #121212 !important;
       --docsify-darklight-theme-textColor: #32CD32 !important;
-      --docsify-darklight-theme-codeBackgroundColor: #1a1a1a !important;
+      --docsify-darklight-theme-codeBackgroundColor: #0a0a0a !important;
       --docsify-darklight-theme-codeTextColor: #32CD32 !important;
     }
 
-    /* Light Mode Overrides */
     body.light {
       --docsify-darklight-theme-background: #ffffff !important;
       --docsify-darklight-theme-textColor: #000000 !important;
@@ -36,18 +34,51 @@
 
     .markdown-section code {
       font-family: '0xProto Nerd Font', monospace !important;
+      background: #0a0a0a !important;
       color: #32CD32 !important;
+      border: 1px solid #1f3a1f !important;
+      box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.6), inset -1px -1px 0 rgba(50, 205, 50, 0.08) !important;
+      padding: 1px 6px !important;
+      border-radius: 0 !important;
     }
 
-    /* Alternating Row Colors */
+    .markdown-section a code,
+    .markdown-section a:hover code {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+
+    .markdown-section a code {
+      color: #32CD32 !important;
+      transition: color 120ms linear !important;
+    }
+
+    .markdown-section a:hover code {
+      color: #7CFF7C !important;
+    }
+
+    .markdown-section repo-tag {
+      display: inline-block;
+      font-family: '0xProto Nerd Font', monospace;
+      font-size: 0.85em;
+      background: #0a0a0a;
+      color: #32CD32;
+      border: 1px solid #1f3a1f;
+      box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.6), inset -1px -1px 0 rgba(50, 205, 50, 0.08);
+      padding: 1px 6px;
+      margin-right: 4px;
+      line-height: 1.4;
+    }
+
     .markdown-section table tr:nth-child(odd) {
       background-color: #121212 !important;
     }
     .markdown-section table tr:nth-child(even) {
       background-color: #1a1a1a !important;
     }
-    
-    /* Ensure table headers look right */
+
     .markdown-section table thead tr {
       background-color: #1a1a1a !important;
       border-bottom: 2px solid #32CD32;
@@ -58,14 +89,21 @@
       padding: 10px;
     }
 
-    /* Icon styling */
+    .markdown-section table tbody td:nth-child(2) {
+      color: #d4d4d4 !important;
+      font-style: italic !important;
+    }
+
+    .markdown-section .github-only {
+      display: none !important;
+    }
+
     .category-icon {
       margin-right: 10px;
       width: 1.2em;
       text-align: center;
     }
 
-    /* Terminal Search Styling */
     .terminal-search-container {
       box-sizing: border-box;
       max-width: 800px;

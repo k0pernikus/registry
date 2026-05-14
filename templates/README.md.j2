@@ -2,7 +2,11 @@
 
 A curated list of my public repositories, automatically updated.
 
-**[Live search →](https://k0pernikus.github.io/registry/)** (fuzzy-search UI, GitHub Pages)
+<div class="github-only">
+
+[k0pernikus' public github repositories web view](https://k0pernikus.github.io/registry/)
+
+</div>
 
 ## Contents
 {% for id, category in categories.items() %}
@@ -12,10 +16,10 @@ A curated list of my public repositories, automatically updated.
 {% for id, category in categories.items() %}
 ## <i class="{{ category.icon }}"></i> {{ category.display_name }} {: #{{ id }} }
 
-| Name | Description | Tags | Stars |
-| :--- | :--- | :--- | :--- |
+| Name | Description | Tags |
+| :--- | :--- | :--- |
 {% for repo in category.repos -%}
-| <a href="{{ repo.url }}" target="_blank">`{{ repo.name }}`</a> | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}`{{ topic.name }}` {% endfor %} | `{{ repo.stargazerCount }} <i class="fa-solid fa-star"></i>` |
+| <a href="{{ repo.url }}" target="_blank">`{{ repo.name }}`</a> | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}<repo-tag>{{ topic.name }}</repo-tag> {% endfor %} |
 {% endfor %}
 
 {% endfor %}

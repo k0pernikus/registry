@@ -20,7 +20,7 @@ jobs:
       - name: Fetch Repositories
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json
+        run: gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics --limit 1000 > repos.json
 
       - name: Verify Data State
         run: |
