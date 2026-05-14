@@ -1,5 +1,6 @@
 import json
 import sys
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TypedDict
@@ -21,10 +22,96 @@ class Category(TypedDict):
     repos: list[Repository]
 
 
-class CategoryConfig(TypedDict):
-    name: str
+@dataclass(frozen=True)
+class CategoryRule:
+    id: str
+    display_name: str
     icon: str
-    keywords: list[str]
+    topics: tuple[str, ...] = field(default_factory=tuple)
+    name_substrings: tuple[str, ...] = field(default_factory=tuple)
+    desc_substrings: tuple[str, ...] = field(default_factory=tuple)
+    name_prefixes: tuple[str, ...] = field(default_factory=tuple)
+    name_suffixes: tuple[str, ...] = field(default_factory=tuple)
+
+
+OTHER_ID = "other"
+
+CATEGORY_RULES: tuple[CategoryRule, ...] = (
+    CategoryRule(
+        id="php",
+        display_name="PHP",
+        icon="fa-brands fa-php",
+        topics=("php", "symfony", "laravel", "composer"),
+        name_substrings=("php", "symfony", "laravel", "composer"),
+        desc_substrings=("php", "symfony", "laravel", "composer"),
+    ),
+    CategoryRule(
+        id="rust",
+        display_name="Rust",
+        icon="fa-brands fa-rust",
+        topics=("rust", "cargo"),
+        name_substrings=("rust", "cargo"),
+        desc_substrings=("rust", "cargo"),
+    ),
+    CategoryRule(
+        id="docker",
+        display_name="Docker",
+        icon="fa-brands fa-docker",
+        topics=("docker", "dockerfile", "docker-compose"),
+        name_substrings=("docker", "dockerfile", "docker-compose"),
+        desc_substrings=("docker", "dockerfile", "docker-compose"),
+    ),
+    CategoryRule(
+        id="typescript",
+        display_name="TypeScript",
+        icon="fa-brands fa-js",
+        topics=("typescript", "ts"),
+        name_substrings=("typescript", "ts"),
+        desc_substrings=("typescript", "ts"),
+    ),
+    CategoryRule(
+        id="javascript",
+        display_name="JavaScript",
+        icon="fa-brands fa-square-js",
+        topics=("javascript", "js", "node", "chrome-extension"),
+        name_substrings=("javascript", "js", "node", "chrome-extension"),
+        desc_substrings=("javascript", "js", "node", "chrome-extension"),
+    ),
+    CategoryRule(
+        id="python",
+        display_name="Python",
+        icon="fa-brands fa-python",
+        topics=("python", "django", "flask", "fastapi", "uv", "pip"),
+        name_substrings=("python", "django", "flask", "fastapi", "uv", "pip"),
+        desc_substrings=("python", "django", "flask", "fastapi", "uv", "pip"),
+    ),
+    CategoryRule(
+        id="go",
+        display_name="Go",
+        icon="fa-brands fa-golang",
+        topics=("go", "golang"),
+        name_substrings=("golang",),
+        desc_substrings=("golang",),
+        name_prefixes=("go-",),
+        name_suffixes=("-go",),
+    ),
+    CategoryRule(
+        id="shell",
+        display_name="Shell",
+        icon="fa-solid fa-terminal",
+        topics=("shell", "bash", "zsh", "fish", "dotfiles"),
+        name_substrings=("shell", "bash", "zsh", "fish", "dotfiles"),
+        desc_substrings=("shell", "bash", "zsh", "fish", "dotfiles"),
+    ),
+)
+
+OTHER_RULE = CategoryRule(
+    id=OTHER_ID,
+    display_name="Other",
+    icon="fa-solid fa-box-open",
+)
+
+ALL_RULES: tuple[CategoryRule, ...] = (*CATEGORY_RULES, OTHER_RULE)
 
 
 def fetch_repos(source: str) -> list[Repository]:
@@ -32,138 +119,41 @@ def fetch_repos(source: str) -> list[Repository]:
     return sorted(repos, key=lambda x: x["name"].lower())
 
 
-def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
-    category_configs: dict[str, CategoryConfig] = {
-        "php": {
-            "name": "PHP",
-            "icon": "fa-brands fa-php",
-            "keywords": [
-                "php",
-                "symfony",
-                "laravel",
-                "composer",
-            ],
-        },
-        "rust": {
-            "name": "Rust",
-            "icon": "fa-brands fa-rust",
-            "keywords": [
-                "rust",
-                "cargo",
-            ],
-        },
-        "docker": {
-            "name": "Docker",
-            "icon": "fa-brands fa-docker",
-            "keywords": [
-                "docker",
-                "dockerfile",
-                "docker-compose",
-            ],
-        },
-        "typescript": {
-            "name": "TypeScript",
-            "icon": "fa-brands fa-js",
-            "keywords": [
-                "typescript",
-                "ts",
-            ],
-        },
-        "javascript": {
-            "name": "JavaScript",
-            "icon": "fa-brands fa-square-js",
-            "keywords": [
-                "javascript",
-                "js",
-                "node",
-                "chrome-extension",
-            ],
-        },
-        "python": {
-            "name": "Python",
-            "icon": "fa-brands fa-python",
-            "keywords": [
-                "python",
-                "django",
-                "flask",
-                "fastapi",
-                "uv",
-                "pip",
-            ],
-        },
-        "go": {
-            "name": "Go",
-            "icon": "fa-brands fa-golang",
-            "keywords": [
-                "go",
-                "golang",
-            ],
-        },
-        "shell": {
-            "name": "Shell",
-            "icon": "fa-solid fa-terminal",
-            "keywords": [
-                "shell",
-                "bash",
-                "zsh",
-                "fish",
-                "dotfiles",
-            ],
-        },
-        "other": {
-            "name": "Other",
-            "icon": "fa-solid fa-box-open",
-            "keywords": [],
-        },
-    }
+def _topic_match(rule: CategoryRule, topics: frozenset[str]) -> bool:
+    return not topics.isdisjoint(rule.topics)
 
-    categories: dict[str, Category] = {
-        k: {
-            "display_name": v["name"],
-            "icon": v["icon"],
-            "repos": [],
-        }
-        for k, v in category_configs.items()
-    }
+
+def _heuristic_match(rule: CategoryRule, name: str, desc: str) -> bool:
+    return (
+        any(s in name for s in rule.name_substrings)
+        or any(s in desc for s in rule.desc_substrings)
+        or any(name.startswith(p) for p in rule.name_prefixes)
+        or any(name.endswith(s) for s in rule.name_suffixes)
+    )
+
+
+def _pick_category(topics: frozenset[str], name: str, desc: str) -> str:
+    for rule in CATEGORY_RULES:
+        if _topic_match(rule, topics):
+            return rule.id
+    for rule in CATEGORY_RULES:
+        if _heuristic_match(rule, name, desc):
+            return rule.id
+    return OTHER_ID
+
+
+def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
+    categories: dict[str, Category] = {rule.id: Category(display_name=rule.display_name, icon=rule.icon, repos=[]) for rule in ALL_RULES}
 
     for repo in repos:
         raw_topics = repo.get("repositoryTopics")
-        topics: list[str] = [t["name"].lower() for t in raw_topics] if raw_topics else []
-        repo_name_lower = repo["name"].lower()
-        repo_desc_lower = (repo.get("description") or "").lower()
+        topics: frozenset[str] = frozenset(t["name"].lower() for t in raw_topics) if raw_topics else frozenset()
+        name = repo["name"].lower()
+        desc = (repo.get("description") or "").lower()
+        cat_id = _pick_category(topics, name, desc)
+        categories[cat_id]["repos"].append(repo)
 
-        matched_category = "other"
-        
-        for cat_id, config in category_configs.items():
-            if cat_id == "other":
-                continue
-
-            if any(kw in topics for kw in config["keywords"]):
-                matched_category = cat_id
-                break
-        
-        if matched_category == "other":
-            for cat_id, config in category_configs.items():
-                if cat_id == "other":
-                    continue
-                
-                if cat_id == "go":
-                    if "golang" in repo_name_lower or "golang" in repo_desc_lower or \
-                       repo_name_lower.startswith("go-") or repo_name_lower.endswith("-go"):
-                        matched_category = cat_id
-                        break
-                    continue
-
-                if any(kw in repo_name_lower for kw in config["keywords"]) or \
-                   any(kw in repo_desc_lower for kw in config["keywords"]):
-                    matched_category = cat_id
-                    break
-
-        categories[matched_category]["repos"].append(repo)
-
-    return {
-        k: v for k, v in sorted(categories.items()) if v["repos"]
-    }
+    return {k: v for k, v in sorted(categories.items()) if v["repos"]}
 
 
 def generate_registry(categories: dict[str, Category]) -> None:
@@ -172,9 +162,9 @@ def generate_registry(categories: dict[str, Category]) -> None:
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    
+
     last_updated: str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
-    
+
     readme_template = env.get_template("README.md.j2")
     readme_content: str = readme_template.render(
         categories=categories,
@@ -183,11 +173,9 @@ def generate_registry(categories: dict[str, Category]) -> None:
     Path("README.md").write_text(readme_content, encoding="utf-8")
 
     index_template = env.get_template("index.html.j2")
-    
-    all_repos = []
-    for cat in categories.values():
-        all_repos.extend(cat["repos"])
-        
+
+    all_repos: list[Repository] = [repo for cat in categories.values() for repo in cat["repos"]]
+
     index_content: str = index_template.render(
         repos_json=json.dumps(all_repos),
     )
@@ -199,7 +187,7 @@ def main() -> None:
     if not Path(source).exists():
         print(f"Error: {source} not found.", file=sys.stderr)
         sys.exit(1)
-        
+
     repos: list[Repository] = fetch_repos(source)
     categories: dict[str, Category] = categorize_repos(repos)
     generate_registry(categories)

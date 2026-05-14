@@ -4,16 +4,10 @@ version = "0.1.0"
 description = "Meta-repo for public repositories"
 readme = "README.md"
 requires-python = ">=3.15"
-dependencies = [
-    "jinja2>=3.1.6",
-    "pyyaml>=6.0.3",
-]
+dependencies = ["jinja2>=3.1.6", "pyyaml>=6.0.3"]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.15.13",
-    "ty>=0.0.35",
-]
+dev = ["ruff>=0.15.13", "ty>=0.0.35"]
 
 [tool.ruff]
 preview = true
@@ -21,8 +15,25 @@ line-length = 160
 target-version = "py315"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RET", "ARG", "PTH", "COM", "ERA"]
-ignore = ["D"] # Ignore docstring requirements for now as per zero-comment mandate
+select = [
+  "E",
+  "F",
+  "I",
+  "N",
+  "UP",
+  "B",
+  "A",
+  "C4",
+  "SIM",
+  "RET",
+  "ARG",
+  "PTH",
+  "COM",
+  "ERA",
+]
+ignore = [
+  "D",
+]
 
 [tool.ruff.format]
 quote-style = "double"
