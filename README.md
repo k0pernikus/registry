@@ -69,7 +69,7 @@ A curated list of my public repositories, automatically updated.
 | <a href="https://github.com/k0pernikus/pomodoro" target="_blank">`pomodoro`</a> | *No description provided.* |  | `0 <i class="fa-solid fa-star"></i>` |
 | <a href="https://github.com/k0pernikus/promise" target="_blank">`promise`</a> | For learning purpose: Working with promises. |  | `0 <i class="fa-solid fa-star"></i>` |
 | <a href="https://github.com/k0pernikus/PureSnake" target="_blank">`PureSnake`</a> | A simple snake clone written in PureBasic. |  | `1 <i class="fa-solid fa-star"></i>` |
-| <a href="https://github.com/k0pernikus/registry" target="_blank">`registry`</a> | *No description provided.* |  | `0 <i class="fa-solid fa-star"></i>` |
+| <a href="https://github.com/k0pernikus/registry" target="_blank">`registry`</a> | my public github repositories | `gh-pages` `git` `github` `list`  | `0 <i class="fa-solid fa-star"></i>` |
 | <a href="https://github.com/k0pernikus/repro-destiny-76" target="_blank">`repro-destiny-76`</a> | *No description provided.* |  | `0 <i class="fa-solid fa-star"></i>` |
 | <a href="https://github.com/k0pernikus/resume" target="_blank">`resume`</a> | *No description provided.* |  | `0 <i class="fa-solid fa-star"></i>` |
 | <a href="https://github.com/k0pernikus/scavenger-hunt-webservice" target="_blank">`scavenger-hunt-webservice`</a> | *No description provided.* |  | `1 <i class="fa-solid fa-star"></i>` |
@@ -136,4 +136,4 @@ A curated list of my public repositories, automatically updated.
 
 
 ---
-*Last updated: 2026-05-14 18:11:53 UTC*
+*Last updated: 2026-05-14 18:32:35 UTC*

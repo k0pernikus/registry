@@ -5,5 +5,7 @@ pre-commit:
 
 pre-push:
   commands:
+    check:
+      run: mise run check
     generate:
       run: mise run generate

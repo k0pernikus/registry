@@ -15,6 +15,18 @@ class Repository(TypedDict):
     stargazerCount: int
 
 
+class Category(TypedDict):
+    display_name: str
+    icon: str
+    repos: list[Repository]
+
+
+class CategoryConfig(TypedDict):
+    name: str
+    icon: str
+    keywords: list[str]
+
+
 def fetch_repos() -> list[Repository]:
     cmd: list[str] = [
         "gh",
@@ -28,27 +40,104 @@ def fetch_repos() -> list[Repository]:
         "1000",
     ]
     result: subprocess.CompletedProcess[str] = subprocess.run(
-        cmd, capture_output=True, text=True, check=True
+        cmd, capture_output=True, text=True, check=True,
     )
     repos: list[Repository] = json.loads(result.stdout)
     return sorted(repos, key=lambda x: x["name"].lower())
 
 
-def categorize_repos(repos: list[Repository]) -> dict[str, dict]:
-    category_configs = {
-        "php": {"name": "PHP", "icon": "fa-brands fa-php", "keywords": ["php", "symfony", "laravel", "composer"]},
-        "rust": {"name": "Rust", "icon": "fa-brands fa-rust", "keywords": ["rust", "cargo"]},
-        "docker": {"name": "Docker", "icon": "fa-brands fa-docker", "keywords": ["docker", "dockerfile", "docker-compose"]},
-        "typescript": {"name": "TypeScript", "icon": "fa-brands fa-js", "keywords": ["typescript", "ts"]},
-        "javascript": {"name": "JavaScript", "icon": "fa-brands fa-square-js", "keywords": ["javascript", "js", "node", "chrome-extension"]},
-        "python": {"name": "Python", "icon": "fa-brands fa-python", "keywords": ["python", "django", "flask", "fastapi", "uv", "pip"]},
-        "go": {"name": "Go", "icon": "fa-brands fa-golang", "keywords": ["go", "golang"]},
-        "shell": {"name": "Shell", "icon": "fa-solid fa-terminal", "keywords": ["shell", "bash", "zsh", "fish", "dotfiles"]},
-        "other": {"name": "Other", "icon": "fa-solid fa-box-open", "keywords": []},
+def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
+    category_configs: dict[str, CategoryConfig] = {
+        "php": {
+            "name": "PHP",
+            "icon": "fa-brands fa-php",
+            "keywords": [
+                "php",
+                "symfony",
+                "laravel",
+                "composer",
+            ],
+        },
+        "rust": {
+            "name": "Rust",
+            "icon": "fa-brands fa-rust",
+            "keywords": [
+                "rust",
+                "cargo",
+            ],
+        },
+        "docker": {
+            "name": "Docker",
+            "icon": "fa-brands fa-docker",
+            "keywords": [
+                "docker",
+                "dockerfile",
+                "docker-compose",
+            ],
+        },
+        "typescript": {
+            "name": "TypeScript",
+            "icon": "fa-brands fa-js",
+            "keywords": [
+                "typescript",
+                "ts",
+            ],
+        },
+        "javascript": {
+            "name": "JavaScript",
+            "icon": "fa-brands fa-square-js",
+            "keywords": [
+                "javascript",
+                "js",
+                "node",
+                "chrome-extension",
+            ],
+        },
+        "python": {
+            "name": "Python",
+            "icon": "fa-brands fa-python",
+            "keywords": [
+                "python",
+                "django",
+                "flask",
+                "fastapi",
+                "uv",
+                "pip",
+            ],
+        },
+        "go": {
+            "name": "Go",
+            "icon": "fa-brands fa-golang",
+            "keywords": [
+                "go",
+                "golang",
+            ],
+        },
+        "shell": {
+            "name": "Shell",
+            "icon": "fa-solid fa-terminal",
+            "keywords": [
+                "shell",
+                "bash",
+                "zsh",
+                "fish",
+                "dotfiles",
+            ],
+        },
+        "other": {
+            "name": "Other",
+            "icon": "fa-solid fa-box-open",
+            "keywords": [],
+        },
     }
 
-    categories: dict[str, dict] = {
-        k: {"display_name": v["name"], "icon": v["icon"], "repos": []} for k, v in category_configs.items()
+    categories: dict[str, Category] = {
+        k: {
+            "display_name": v["name"],
+            "icon": v["icon"],
+            "repos": [],
+        }
+        for k, v in category_configs.items()
     }
 
     for repo in repos:
@@ -61,7 +150,9 @@ def categorize_repos(repos: list[Repository]) -> dict[str, dict]:
         
         # Priority 1: Topics (exact match)
         for cat_id, config in category_configs.items():
-            if cat_id == "other": continue
+            if cat_id == "other":
+                continue
+
             if any(kw in topics for kw in config["keywords"]):
                 matched_category = cat_id
                 break
@@ -69,7 +160,8 @@ def categorize_repos(repos: list[Repository]) -> dict[str, dict]:
         if matched_category == "other":
             # Priority 2: Name or Description match
             for cat_id, config in category_configs.items():
-                if cat_id == "other": continue
+                if cat_id == "other":
+                    continue
                 
                 # Special case for 'go' to avoid 'golden', 'goat', etc.
                 if cat_id == "go":
@@ -92,7 +184,7 @@ def categorize_repos(repos: list[Repository]) -> dict[str, dict]:
     }
 
 
-def generate_registry(categories: dict[str, list[Repository]]) -> None:
+def generate_registry(categories: dict[str, Category]) -> None:
     env: Environment = Environment(
         loader=FileSystemLoader("templates"),
         trim_blocks=True,
@@ -125,7 +217,7 @@ def generate_registry(categories: dict[str, list[Repository]]) -> None:
 
 def main() -> None:
     repos: list[Repository] = fetch_repos()
-    categories: dict[str, list[Repository]] = categorize_repos(repos)
+    categories: dict[str, Category] = categorize_repos(repos)
     generate_registry(categories)
 
 

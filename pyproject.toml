@@ -16,11 +16,11 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 160
 target-version = "py315"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RET", "ARG", "PTH", "ERA"]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RET", "ARG", "PTH", "COM", "ERA"]
 ignore = ["D"] # Ignore docstring requirements for now as per zero-comment mandate
 
 [tool.ruff.format]
