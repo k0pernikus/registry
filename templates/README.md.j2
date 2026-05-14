@@ -1,0 +1,22 @@
+# Awesome Registry
+
+A curated list of my public repositories, automatically updated.
+
+## Contents
+{% for id, category in categories.items() %}
+- [{{ category.display_name }}](#{{ id }})
+{% endfor %}
+
+{% for id, category in categories.items() %}
+## <i class="{{ category.icon }}"></i> {{ category.display_name }} {: #{{ id }} }
+
+| Name | Description | Tags | Stars |
+| :--- | :--- | :--- | :--- |
+{% for repo in category.repos -%}
+| [`{{ repo.name }}`]({{ repo.url }}) | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}`{{ topic.name }}` {% endfor %} | `{{ repo.stargazerCount }} <i class="fa-solid fa-star"></i>` |
+{% endfor %}
+
+{% endfor %}
+
+---
+*Last updated: {{ last_updated }}*

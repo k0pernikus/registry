@@ -1,0 +1,19 @@
+[tools]
+uv = "0.11.14"
+gh = "2.92.0"
+
+[tasks.generate]
+description = "Generate the README.md from GitHub repositories"
+run = "uv run python src/generate.py"
+
+[tasks.check]
+description = "Run linting and type checking"
+run = "uv run ruff check src && uv run ty check src"
+
+[tasks.format]
+description = "Format the source code"
+run = "uv run ruff format src"
+
+[tasks.serve]
+description = "Serve the registry locally using Docsify"
+run = "uv run python -m http.server 3000"

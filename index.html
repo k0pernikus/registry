@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registry - Awesome List</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="A curated list of my public repositories">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  
+  <!-- Theme: Dark/Light -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css" title="docsify-darklight-theme" type="text/css" />
+  
+  <!-- Font: 0xProto Nerd Font -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@m234/nerd-fonts@3.4.0/css/0xproto.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --docsify-darklight-theme-accent: #32CD32 !important;
+    }
+    
+    body {
+      font-family: '0xProto Nerd Font', monospace !important;
+    }
+
+    /* Dark Mode Overrides (Retro Terminal) */
+    body.dark {
+      --docsify-darklight-theme-background: #121212 !important;
+      --docsify-darklight-theme-textColor: #32CD32 !important;
+      --docsify-darklight-theme-codeBackgroundColor: #1a1a1a !important;
+      --docsify-darklight-theme-codeTextColor: #32CD32 !important;
+    }
+
+    /* Light Mode Overrides */
+    body.light {
+      --docsify-darklight-theme-background: #ffffff !important;
+      --docsify-darklight-theme-textColor: #000000 !important;
+    }
+
+    .markdown-section code {
+      font-family: '0xProto Nerd Font', monospace !important;
+      color: #32CD32 !important;
+    }
+
+    /* Alternating Row Colors */
+    .markdown-section table tr:nth-child(odd) {
+      background-color: #121212 !important;
+    }
+    .markdown-section table tr:nth-child(even) {
+      background-color: #1a1a1a !important;
+    }
+    
+    /* Ensure table headers look right */
+    .markdown-section table thead tr {
+      background-color: #1a1a1a !important;
+      border-bottom: 2px solid #32CD32;
+    }
+
+    .markdown-section table td, .markdown-section table th {
+      border: 1px solid #222 !important;
+      padding: 10px;
+    }
+
+    /* Icon styling */
+    .category-icon {
+      margin-right: 10px;
+      width: 1.2em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'Registry',
+      repo: 'https://github.com/k0pernikus/registry',
+      loadSidebar: false,
+      subMaxLevel: 2,
+      search: 'auto',
+      darklightTheme: {
+        defaultTheme: 'dark',
+        siteFont: "0xProto Nerd Font",
+        codeFontFamily: '0xProto Nerd Font, monospace',
+        bodyFontSize: '16px',
+        dark: {
+          accent: '#32CD32',
+          background: '#121212',
+          textColor: '#32CD32',
+        },
+        light: {
+          accent: '#32CD32',
+          background: '#ffffff',
+          textColor: '#000000',
+        }
+      }
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <!-- Plugins -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+</body>
+</html>
