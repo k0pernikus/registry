@@ -8,13 +8,42 @@ on:
     - cron: "42 23 1 * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repositories
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh repo list --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repos-json
+          path: repos.json
+
   update:
+    needs: fetch
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/astral-sh/uv:debian
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Git
+        run: |
+          apt-get update -qq
+          apt-get install -qq git
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: repos-json
+          path: .
 
       - name: Install dependencies
         run: uv sync
@@ -25,13 +54,11 @@ jobs:
           uv run ty check src
 
       - name: Generate README
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: uv run python src/generate.py
 
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
+          git add README.md index.html
           git diff --quiet && git diff --staged --quiet || (git commit -m "docs: update registry [skip ci]" && git push)

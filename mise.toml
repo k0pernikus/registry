@@ -8,7 +8,10 @@ postinstall = "lefthook install"
 
 [tasks.generate]
 description = "Generate the README.md from GitHub repositories"
-run = "uv run python src/generate.py"
+run = [
+  "gh repo list --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json",
+  "uv run python src/generate.py"
+]
 
 [tasks.check]
 description = "Run linting and type checking"

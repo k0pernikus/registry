@@ -1,5 +1,5 @@
 import json
-import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TypedDict
@@ -27,22 +27,8 @@ class CategoryConfig(TypedDict):
     keywords: list[str]
 
 
-def fetch_repos() -> list[Repository]:
-    cmd: list[str] = [
-        "gh",
-        "repo",
-        "list",
-        "--visibility",
-        "public",
-        "--json",
-        "name,description,url,repositoryTopics,stargazerCount",
-        "--limit",
-        "1000",
-    ]
-    result: subprocess.CompletedProcess[str] = subprocess.run(
-        cmd, capture_output=True, text=True, check=True,
-    )
-    repos: list[Repository] = json.loads(result.stdout)
+def fetch_repos(source: str) -> list[Repository]:
+    repos: list[Repository] = json.loads(Path(source).read_text(encoding="utf-8"))
     return sorted(repos, key=lambda x: x["name"].lower())
 
 
@@ -148,7 +134,6 @@ def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
 
         matched_category = "other"
         
-        # Priority 1: Topics (exact match)
         for cat_id, config in category_configs.items():
             if cat_id == "other":
                 continue
@@ -158,12 +143,10 @@ def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
                 break
         
         if matched_category == "other":
-            # Priority 2: Name or Description match
             for cat_id, config in category_configs.items():
                 if cat_id == "other":
                     continue
                 
-                # Special case for 'go' to avoid 'golden', 'goat', etc.
                 if cat_id == "go":
                     if "golang" in repo_name_lower or "golang" in repo_desc_lower or \
                        repo_name_lower.startswith("go-") or repo_name_lower.endswith("-go"):
@@ -178,7 +161,6 @@ def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
 
         categories[matched_category]["repos"].append(repo)
 
-    # Filter out empty categories and sort by name
     return {
         k: v for k, v in sorted(categories.items()) if v["repos"]
     }
@@ -193,7 +175,6 @@ def generate_registry(categories: dict[str, Category]) -> None:
     
     last_updated: str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
     
-    # Generate README.md
     readme_template = env.get_template("README.md.j2")
     readme_content: str = readme_template.render(
         categories=categories,
@@ -201,10 +182,8 @@ def generate_registry(categories: dict[str, Category]) -> None:
     )
     Path("README.md").write_text(readme_content, encoding="utf-8")
 
-    # Generate index.html
     index_template = env.get_template("index.html.j2")
     
-    # Flatten categories for easier search
     all_repos = []
     for cat in categories.values():
         all_repos.extend(cat["repos"])
@@ -216,7 +195,12 @@ def generate_registry(categories: dict[str, Category]) -> None:
 
 
 def main() -> None:
-    repos: list[Repository] = fetch_repos()
+    source = "repos.json"
+    if not Path(source).exists():
+        print(f"Error: {source} not found.", file=sys.stderr)
+        sys.exit(1)
+        
+    repos: list[Repository] = fetch_repos(source)
     categories: dict[str, Category] = categorize_repos(repos)
     generate_registry(categories)
 
