@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 from dataclasses import dataclass, field
@@ -162,7 +163,7 @@ def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
     return {k: v for k, v in sorted(categories.items()) if v["repos"]}
 
 
-def generate_registry(project_cats: dict[str, Category], fork_cats: dict[str, Category], all_repos: list[Repository]) -> None:
+def generate_registry(project_cats: dict[str, Category], fork_cats: dict[str, Category], all_repos: list[Repository], readme_path: Path) -> None:
     env: Environment = Environment(
         loader=FileSystemLoader("templates"),
         trim_blocks=True,
@@ -172,7 +173,7 @@ def generate_registry(project_cats: dict[str, Category], fork_cats: dict[str, Ca
     last_updated: str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     readme_template = env.get_template("README.md.j2")
-    Path("README.md").write_text(
+    readme_path.write_text(
         readme_template.render(project_cats=project_cats, fork_cats=fork_cats, collapse_forks=False),
         encoding="utf-8",
     )
@@ -192,16 +193,26 @@ def generate_registry(project_cats: dict[str, Category], fork_cats: dict[str, Ca
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Render the registry README and index.html.")
+    parser.add_argument(
+        "--local",
+        action="store_true",
+        help="Render README.local.md (gitignored) instead of README.md. Use for local dev.",
+    )
+    args = parser.parse_args()
+
     source = "repos.json"
     if not Path(source).exists():
         print(f"Error: {source} not found.", file=sys.stderr)
         sys.exit(1)
 
+    readme_path = Path("README.local.md") if args.local else Path("README.md")
+
     repos: list[Repository] = fetch_repos(source)
     projects, forks = partition_repos(repos)
     project_cats = categorize_repos(projects)
     fork_cats = categorize_repos(forks)
-    generate_registry(project_cats, fork_cats, projects + forks)
+    generate_registry(project_cats, fork_cats, projects + forks, readme_path)
 
 
 if __name__ == "__main__":
