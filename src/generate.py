@@ -111,7 +111,15 @@ def generate_registry(categories: dict[str, list[Repository]]) -> None:
 
     # Generate index.html
     index_template = env.get_template("index.html.j2")
-    index_content: str = index_template.render()
+    
+    # Flatten categories for easier search
+    all_repos = []
+    for cat in categories.values():
+        all_repos.extend(cat["repos"])
+        
+    index_content: str = index_template.render(
+        repos_json=json.dumps(all_repos),
+    )
     Path("index.html").write_text(index_content, encoding="utf-8")
 
 

@@ -2,7 +2,7 @@ name: Update Registry
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "42 23 1 * *"
   workflow_dispatch:
 
 jobs:

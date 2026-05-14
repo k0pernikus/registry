@@ -69,17 +69,92 @@
       width: 1.2em;
       text-align: center;
     }
+
+    /* Terminal Search Styling */
+    .terminal-search-container {
+      margin: 20px 0;
+      max-width: 600px;
+    }
+    .terminal-search {
+      background: #121212;
+      border: 1px solid #32CD32;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      font-family: '0xProto Nerd Font', monospace;
+    }
+    .terminal-prompt {
+      color: #32CD32;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .terminal-search input {
+      background: transparent;
+      border: none;
+      color: #32CD32;
+      outline: none;
+      flex-grow: 1;
+      font-family: '0xProto Nerd Font', monospace;
+      font-size: 16px;
+    }
+    .terminal-cursor {
+      color: #32CD32;
+      animation: blink 1s step-end infinite;
+      margin-left: 5px;
+    }
+    @keyframes blink {
+      from, to { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .search-results-container {
+      background: #1a1a1a;
+      border: 1px solid #32CD32;
+      border-top: none;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      position: absolute;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 100;
+    }
+    .terminal-search-container {
+      position: relative;
+    }
+    .search-results-container.active {
+      display: block;
+    }
+    .search-result-item {
+      padding: 8px 12px;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+    }
+    .search-result-item:hover, .search-result-item.selected {
+      background: #32CD32;
+      color: #121212;
+    }
+    .search-result-item .repo-name {
+      font-weight: bold;
+    }
+    .search-result-item .repo-desc {
+      font-size: 0.8em;
+      opacity: 0.8;
+      display: block;
+    }
   </style>
 </head>
 <body>
   <div id="app"></div>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
   <script>
+    const allRepos = {{ repos_json | safe }};
+    
     window.$docsify = {
       name: 'Registry',
       repo: 'https://github.com/k0pernikus/registry',
       loadSidebar: false,
       subMaxLevel: 2,
-      search: 'auto',
+      search: false,
       darklightTheme: {
         defaultTheme: 'dark',
         siteFont: "0xProto Nerd Font",
@@ -95,7 +170,90 @@
           background: '#ffffff',
           textColor: '#000000',
         }
-      }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.doneEach(function() {
+            const searchInput = document.getElementById('fuzzy-search');
+            const resultsContainer = document.getElementById('search-results');
+            if (!searchInput || !resultsContainer) return;
+
+            const fuse = new Fuse(allRepos, {
+              keys: ['name', 'description', 'url'],
+              threshold: 0.4
+            });
+
+            let selectedIndex = -1;
+            let results = [];
+
+            searchInput.addEventListener('input', (e) => {
+              const query = e.target.value;
+              if (query.length < 2) {
+                resultsContainer.classList.remove('active');
+                return;
+              }
+
+              results = fuse.search(query);
+              if (results.length > 0) {
+                resultsContainer.innerHTML = results.slice(0, 10).map((result, index) => `
+                  <div class="search-result-item" data-url="${result.item.url}" data-index="${index}">
+                    <span class="repo-name">${result.item.name}</span>
+                    <span class="repo-desc">${result.item.description || ''}</span>
+                  </div>
+                `).join('');
+                resultsContainer.classList.add('active');
+              } else {
+                resultsContainer.classList.remove('active');
+              }
+              selectedIndex = -1;
+            });
+
+            searchInput.addEventListener('keydown', (e) => {
+              const items = resultsContainer.querySelectorAll('.search-result-item');
+              if (e.key === 'ArrowDown') {
+                selectedIndex = (selectedIndex + 1) % items.length;
+                updateSelection(items);
+                e.preventDefault();
+              } else if (e.key === 'ArrowUp') {
+                selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+                updateSelection(items);
+                e.preventDefault();
+              } else if (e.key === 'Enter') {
+                if (selectedIndex >= 0) {
+                  window.open(items[selectedIndex].dataset.url, '_blank');
+                } else if (results.length > 0) {
+                  window.open(results[0].item.url, '_blank');
+                }
+              }
+            });
+
+            function updateSelection(items) {
+              items.forEach((item, index) => {
+                if (index === selectedIndex) {
+                  item.classList.add('selected');
+                  item.scrollIntoView({ block: 'nearest' });
+                } else {
+                  item.classList.remove('selected');
+                }
+              });
+            }
+
+            resultsContainer.addEventListener('click', (e) => {
+              const item = e.target.closest('.search-result-item');
+              if (item) {
+                window.open(item.dataset.url, '_blank');
+              }
+            });
+
+            // Hide results on click outside
+            document.addEventListener('click', (e) => {
+              if (!e.target.closest('.terminal-search-container')) {
+                resultsContainer.classList.remove('active');
+              }
+            });
+          });
+        }
+      ]
     }
   </script>
   <!-- Docsify v4 -->

@@ -2,6 +2,15 @@
 
 A curated list of my public repositories, automatically updated.
 
+<div class="terminal-search-container">
+  <div class="terminal-search">
+    <span class="terminal-prompt">></span>
+    <input type="text" id="fuzzy-search" placeholder="search_projects..." autocomplete="off">
+    <span class="terminal-cursor">_</span>
+  </div>
+  <div id="search-results" class="search-results-container"></div>
+</div>
+
 ## Contents
 {% for id, category in categories.items() %}
 - [{{ category.display_name }}](#{{ id }})
@@ -13,7 +22,7 @@ A curated list of my public repositories, automatically updated.
 | Name | Description | Tags | Stars |
 | :--- | :--- | :--- | :--- |
 {% for repo in category.repos -%}
-| [`{{ repo.name }}`]({{ repo.url }}) | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}`{{ topic.name }}` {% endfor %} | `{{ repo.stargazerCount }} <i class="fa-solid fa-star"></i>` |
+| <a href="{{ repo.url }}" target="_blank">`{{ repo.name }}`</a> | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}`{{ topic.name }}` {% endfor %} | `{{ repo.stargazerCount }} <i class="fa-solid fa-star"></i>` |
 {% endfor %}
 
 {% endfor %}
