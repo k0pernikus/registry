@@ -36,18 +36,32 @@ gh repo list k0pernikus --visibility public --json name,description,url,reposito
 """
 
 [tasks.render]
-description = "Render the README.md and index.html"
+description = "Render README.local.md (gitignored) and index.html for local dev. CI renders README.md."
 depends = ["fetch"]
-run = "uv run python src/generate.py"
+run = "uv run python src/generate.py --local"
 
 [tasks.generate]
 description = "Fetch and render"
 depends = ["render"]
 
 [tasks.check]
-description = "Run linting and type checking"
+description = "Run linting and type checking in parallel"
+depends = ["lint", "ty-check"]
+
+[tasks.lint]
+description = "Run linting"
 depends = ["sync"]
-run = "uv run ruff check src && uv run ty check src"
+run = "uv run ruff check src"
+
+[tasks.lint-fix]
+description = "Run linting and fix issues"
+depends = ["sync"]
+run = "uv run ruff check src --fix"
+
+[tasks.ty-check]
+description = "Run type checking"
+depends = ["sync"]
+run = "uv run ty check src"
 
 [tasks.format]
 description = "Format the source code"
