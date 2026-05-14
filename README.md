@@ -131,6 +131,3 @@ A curated list of my public repositories, automatically updated.
 | <a href="https://github.com/k0pernikus/TypeScript" target="_blank">`TypeScript`</a> | TypeScript is a superset of JavaScript that compiles to clean JavaScript output. |  |
 | <a href="https://github.com/k0pernikus/typescript-fizzBuzz" target="_blank">`typescript-fizzBuzz`</a> | TypeScript implementation of FizzBuzz to showcase mocha tests |  |
 
-
----
-*Last updated: 2026-05-14 22:04:59 UTC*

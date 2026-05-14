@@ -167,7 +167,6 @@ def generate_registry(categories: dict[str, Category]) -> None:
     readme_template = env.get_template("README.md.j2")
     readme_content: str = readme_template.render(
         categories=categories,
-        last_updated=last_updated,
     )
     Path("README.md").write_text(readme_content, encoding="utf-8")
 
@@ -177,6 +176,7 @@ def generate_registry(categories: dict[str, Category]) -> None:
 
     index_content: str = index_template.render(
         repos_json=json.dumps(all_repos),
+        last_updated=last_updated,
     )
     Path("index.html").write_text(index_content, encoding="utf-8")
 

@@ -175,6 +175,14 @@
       opacity: 0.8;
       display: block;
     }
+    .last-updated {
+      text-align: center;
+      font-family: '0xProto Nerd Font', monospace;
+      font-size: 0.85em;
+      color: #32CD32;
+      opacity: 0.6;
+      padding: 20px 15px 30px;
+    }
   </style>
 </head>
 <body>
@@ -187,6 +195,7 @@
     <div id="search-results" class="search-results-container"></div>
   </div>
   <div id="app"></div>
+  <footer class="last-updated">Last updated: {{ last_updated }}</footer>
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
   <script>
     const allRepos = {{ repos_json | safe }};
