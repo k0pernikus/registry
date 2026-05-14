@@ -1,3 +1,33 @@
+{% macro repo_table_md(repos) -%}
+| Name | Description | Tags |
+| :--- | :--- | :--- |
+{% for repo in repos -%}
+| <a href="{{ repo.url }}" target="_blank">`{{ repo.name }}`</a> | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}<repo-tag>{{ topic.name }}</repo-tag> {% endfor %} |
+{% endfor %}
+{%- endmacro %}
+{% macro repo_table_html(repos) -%}
+<table>
+<thead><tr><th>Name</th><th>Description</th><th>Tags</th></tr></thead>
+<tbody>
+{% for repo in repos -%}
+<tr><td><a href="{{ repo.url }}" target="_blank"><code>{{ repo.name }}</code></a></td><td>{{ repo.description or '<em>No description provided.</em>' }}</td><td>{% for topic in repo.repositoryTopics or [] %}<repo-tag>{{ topic.name }}</repo-tag> {% endfor %}</td></tr>
+{% endfor -%}
+</tbody>
+</table>
+{%- endmacro %}
+{% macro categorized_md(categories) -%}
+{% for id, cat in categories.items() %}
+### <i class="{{ cat.icon }}"></i> {{ cat.display_name }}
+
+{{ repo_table_md(cat.repos) }}
+{% endfor %}
+{%- endmacro %}
+{% macro categorized_html(categories) -%}
+{% for id, cat in categories.items() %}
+<h3><i class="{{ cat.icon }}"></i> {{ cat.display_name }}</h3>
+{{ repo_table_html(cat.repos) }}
+{% endfor %}
+{%- endmacro %}
 # Awesome Registry
 
 A curated list of my public repositories, automatically updated.
@@ -8,18 +38,18 @@ A curated list of my public repositories, automatically updated.
 
 </div>
 
-## Contents
-{% for id, category in categories.items() %}
-- [{{ category.display_name }}](#{{ id }})
-{% endfor %}
+## my projects
 
-{% for id, category in categories.items() %}
-## <i class="{{ category.icon }}"></i> {{ category.display_name }} {: #{{ id }} }
+{{ categorized_md(project_cats) }}
 
-| Name | Description | Tags |
-| :--- | :--- | :--- |
-{% for repo in category.repos -%}
-| <a href="{{ repo.url }}" target="_blank">`{{ repo.name }}`</a> | {{ repo.description or '*No description provided.*' }} | {% for topic in repo.repositoryTopics or [] %}<repo-tag>{{ topic.name }}</repo-tag> {% endfor %} |
-{% endfor %}
+{% if collapse_forks %}
+<details>
+<summary><strong>my forks</strong> (click to expand)</summary>
+{{ categorized_html(fork_cats) }}
+</details>
+{% endif %}
+{% if not collapse_forks %}
+## my forks
 
-{% endfor %}
+{{ categorized_md(fork_cats) }}
+{% endif %}

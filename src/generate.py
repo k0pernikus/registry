@@ -13,6 +13,7 @@ class Repository(TypedDict):
     description: str
     url: str
     repositoryTopics: list[dict[str, str]] | None
+    isFork: bool
 
 
 class Category(TypedDict):
@@ -118,6 +119,12 @@ def fetch_repos(source: str) -> list[Repository]:
     return sorted(repos, key=lambda x: x["name"].lower())
 
 
+def partition_repos(repos: list[Repository]) -> tuple[list[Repository], list[Repository]]:
+    projects: list[Repository] = [r for r in repos if not r["isFork"]]
+    forks: list[Repository] = [r for r in repos if r["isFork"]]
+    return projects, forks
+
+
 def _topic_match(rule: CategoryRule, topics: frozenset[str]) -> bool:
     return not topics.isdisjoint(rule.topics)
 
@@ -155,7 +162,7 @@ def categorize_repos(repos: list[Repository]) -> dict[str, Category]:
     return {k: v for k, v in sorted(categories.items()) if v["repos"]}
 
 
-def generate_registry(categories: dict[str, Category]) -> None:
+def generate_registry(project_cats: dict[str, Category], fork_cats: dict[str, Category], all_repos: list[Repository]) -> None:
     env: Environment = Environment(
         loader=FileSystemLoader("templates"),
         trim_blocks=True,
@@ -165,20 +172,23 @@ def generate_registry(categories: dict[str, Category]) -> None:
     last_updated: str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     readme_template = env.get_template("README.md.j2")
-    readme_content: str = readme_template.render(
-        categories=categories,
+    Path("README.md").write_text(
+        readme_template.render(project_cats=project_cats, fork_cats=fork_cats, collapse_forks=False),
+        encoding="utf-8",
     )
-    Path("README.md").write_text(readme_content, encoding="utf-8")
+    Path("README.docsify.md").write_text(
+        readme_template.render(project_cats=project_cats, fork_cats=fork_cats, collapse_forks=True),
+        encoding="utf-8",
+    )
 
     index_template = env.get_template("index.html.j2")
-
-    all_repos: list[Repository] = [repo for cat in categories.values() for repo in cat["repos"]]
-
-    index_content: str = index_template.render(
-        repos_json=json.dumps(all_repos),
-        last_updated=last_updated,
+    Path("index.html").write_text(
+        index_template.render(
+            repos_json=json.dumps(all_repos),
+            last_updated=last_updated,
+        ),
+        encoding="utf-8",
     )
-    Path("index.html").write_text(index_content, encoding="utf-8")
 
 
 def main() -> None:
@@ -188,8 +198,10 @@ def main() -> None:
         sys.exit(1)
 
     repos: list[Repository] = fetch_repos(source)
-    categories: dict[str, Category] = categorize_repos(repos)
-    generate_registry(categories)
+    projects, forks = partition_repos(repos)
+    project_cats = categorize_repos(projects)
+    fork_cats = categorize_repos(forks)
+    generate_registry(project_cats, fork_cats, projects + forks)
 
 
 if __name__ == "__main__":

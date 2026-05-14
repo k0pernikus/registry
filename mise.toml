@@ -32,7 +32,7 @@ if [ "$force" -eq 0 ] && [ -f repos.json ] && [ -n "$(find repos.json -mtime -30
     exit 0
 fi
 
-gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics --limit 1000 > repos.json
+gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics,isFork --limit 1000 > repos.json
 """
 
 [tasks.render]
