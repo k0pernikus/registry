@@ -62,7 +62,10 @@ jobs:
           GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: github-actions[bot]@users.noreply.github.com
-          GIT_CONFIG_PARAMETERS: "'safe.directory=${{ github.workspace }}'"
+          GIT_CONFIG_COUNT: "1"
+          GIT_CONFIG_KEY_0: safe.directory
+          GIT_CONFIG_VALUE_0: "*"
         run: |
+          chown -R $(id -u):$(id -g) .
           git add README.md index.html
           git diff --quiet && git diff --staged --quiet || (git commit -m "docs: update registry [skip ci]" && git push)
