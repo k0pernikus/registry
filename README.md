@@ -2,14 +2,7 @@
 
 A curated list of my public repositories, automatically updated.
 
-<div class="terminal-search-container">
-  <div class="terminal-search">
-    <span class="terminal-prompt">></span>
-    <input type="text" id="fuzzy-search" placeholder="search_projects..." autocomplete="off">
-    <span class="terminal-cursor">_</span>
-  </div>
-  <div id="search-results" class="search-results-container"></div>
-</div>
+**[Live search →](https://k0pernikus.github.io/registry/)** (fuzzy-search UI, GitHub Pages)
 
 ## Contents
 - [Docker](#docker)
@@ -136,4 +129,4 @@ A curated list of my public repositories, automatically updated.
 
 
 ---
-*Last updated: 2026-05-14 21:08:41 UTC*
+*Last updated: 2026-05-14 21:25:32 UTC*

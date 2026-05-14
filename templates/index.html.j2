@@ -139,6 +139,14 @@
   </style>
 </head>
 <body>
+  <div class="terminal-search-container">
+    <div class="terminal-search">
+      <span class="terminal-prompt">></span>
+      <input type="text" id="fuzzy-search" placeholder="search_projects..." autocomplete="off">
+      <span class="terminal-cursor">_</span>
+    </div>
+    <div id="search-results" class="search-results-container"></div>
+  </div>
   <div id="app"></div>
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
   <script>
