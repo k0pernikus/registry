@@ -1,0 +1,9 @@
+pre-commit:
+  commands:
+    check:
+      run: mise run check
+
+pre-push:
+  commands:
+    generate:
+      run: mise run generate

@@ -1,6 +1,10 @@
 [tools]
 uv = "0.11.14"
 gh = "2.92.0"
+lefthook = "2.1.6"
+
+[hooks]
+postinstall = "lefthook install"
 
 [tasks.generate]
 description = "Generate the README.md from GitHub repositories"
