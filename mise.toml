@@ -6,21 +6,38 @@ lefthook = "2.1.6"
 [hooks]
 postinstall = "lefthook install"
 
+[settings]
+experimental = true
+
+[tasks.sync]
+description = "Install Python dependencies via uv"
+run = "uv sync"
+
+[tasks.fetch]
+description = "Fetch GitHub repositories data"
+depends = ["sync"]
+run = "gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json"
+
+[tasks.render]
+description = "Render the README.md and index.html"
+depends = ["fetch"]
+run = "uv run python src/generate.py"
+
 [tasks.generate]
-description = "Generate the README.md from GitHub repositories"
-run = [
-  "gh repo list --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json",
-  "uv run python src/generate.py"
-]
+description = "Fetch and render"
+depends = ["render"]
 
 [tasks.check]
 description = "Run linting and type checking"
+depends = ["sync"]
 run = "uv run ruff check src && uv run ty check src"
 
 [tasks.format]
 description = "Format the source code"
+depends = ["sync"]
 run = "uv run ruff format src"
 
 [tasks.serve]
-description = "Serve the registry locally using Docsify"
-run = "uv run python -m http.server 3000"
+description = "Serve the registry locally"
+depends = ["generate"]
+run = "uv run python -m http.server 3000 --bind 0.0.0.0"

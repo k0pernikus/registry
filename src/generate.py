@@ -28,7 +28,7 @@ class CategoryConfig(TypedDict):
 
 
 def fetch_repos(source: str) -> list[Repository]:
-    repos: list[Repository] = json.loads(Path(source).read_text(encoding="utf-8"))
+    repos: list[Repository] = json.loads(Path(source).read_text(encoding="utf-8-sig"))
     return sorted(repos, key=lambda x: x["name"].lower())
 
 

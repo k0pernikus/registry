@@ -1,0 +1,29 @@
+* text=auto eol=lf
+
+*.py     text eol=lf diff=python
+*.md     text eol=lf
+*.j2     text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.json   text eol=lf
+*.toml   text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.lock   text eol=lf
+*.sh     text eol=lf
+.gitignore       text eol=lf
+.gitattributes   text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.svg  text eol=lf
+
+repos.json     linguist-generated=true
+README.md      linguist-generated=true
+index.html     linguist-generated=true
+uv.lock        linguist-generated=true

@@ -15,10 +15,26 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Fetch Repositories
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh repo list --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json
+        run: gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics,stargazerCount --limit 1000 > repos.json
+
+      - name: Verify Data State
+        run: |
+          set -euo pipefail
+          if ! jq -e 'type == "array"' repos.json >/dev/null; then
+            echo "::error::repos.json is not a valid JSON array" >&2
+            exit 1
+          fi
+          count=$(jq 'length' repos.json)
+          echo "Found $count repositories"
+          if [ "$count" -lt 10 ]; then
+            echo "::error::Expected at least 10 repositories, got $count" >&2
+            exit 1
+          fi
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -29,15 +45,13 @@ jobs:
   update:
     needs: fetch
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/astral-sh/uv:debian
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Git
-        run: |
-          apt-get update -qq
-          apt-get install -qq git
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -62,10 +76,6 @@ jobs:
           GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: github-actions[bot]@users.noreply.github.com
-          GIT_CONFIG_COUNT: "1"
-          GIT_CONFIG_KEY_0: safe.directory
-          GIT_CONFIG_VALUE_0: "*"
         run: |
-          chown -R $(id -u):$(id -g) .
           git add README.md index.html
           git diff --quiet && git diff --staged --quiet || (git commit -m "docs: update registry [skip ci]" && git push)
