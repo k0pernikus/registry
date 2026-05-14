@@ -41,3 +41,7 @@ run = "uv run ruff format src"
 description = "Serve the registry locally"
 depends = ["generate"]
 run = "uv run python -m http.server 3000 --bind 0.0.0.0"
+
+[tasks.pages-enable]
+description = "Enable GitHub Pages on gh-pages branch"
+run = "gh api -X POST \"repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/pages\" -f 'source[branch]=gh-pages' -f 'source[path]=/'"
