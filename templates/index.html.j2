@@ -6,16 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="A curated list of my public repositories">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  
-  <!-- Theme: Dark/Light -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css" title="docsify-darklight-theme" type="text/css" />
-  
-  <!-- Font: 0xProto Nerd Font -->
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3.2.0/dist/style.min.css" title="docsify-darklight-theme" type="text/css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@m234/nerd-fonts@3.4.0/css/0xproto.css">
-  
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
   <style>
     :root {
       --docsify-darklight-theme-accent: #32CD32 !important;
@@ -176,7 +171,9 @@
           hook.doneEach(function() {
             const searchInput = document.getElementById('fuzzy-search');
             const resultsContainer = document.getElementById('search-results');
-            if (!searchInput || !resultsContainer) return;
+            if (!searchInput || !resultsContainer) {
+              return;
+            }
 
             const fuse = new Fuse(allRepos, {
               keys: ['name', 'description', 'url'],
@@ -186,81 +183,99 @@
             let selectedIndex = -1;
             let results = [];
 
-            searchInput.addEventListener('input', (e) => {
-              const query = e.target.value;
+            function renderResults(query) {
               if (query.length < 2) {
+                resultsContainer.classList.remove('active');
+                results = [];
+                selectedIndex = -1;
+                return;
+              }
+              results = fuse.search(query);
+              selectedIndex = -1;
+              if (results.length === 0) {
                 resultsContainer.classList.remove('active');
                 return;
               }
-
-              results = fuse.search(query);
-              if (results.length > 0) {
-                resultsContainer.innerHTML = results.slice(0, 10).map((result, index) => `
-                  <div class="search-result-item" data-url="${result.item.url}" data-index="${index}">
-                    <span class="repo-name">${result.item.name}</span>
-                    <span class="repo-desc">${result.item.description || ''}</span>
-                  </div>
-                `).join('');
-                resultsContainer.classList.add('active');
-              } else {
-                resultsContainer.classList.remove('active');
-              }
-              selectedIndex = -1;
-            });
-
-            searchInput.addEventListener('keydown', (e) => {
-              const items = resultsContainer.querySelectorAll('.search-result-item');
-              if (e.key === 'ArrowDown') {
-                selectedIndex = (selectedIndex + 1) % items.length;
-                updateSelection(items);
-                e.preventDefault();
-              } else if (e.key === 'ArrowUp') {
-                selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-                updateSelection(items);
-                e.preventDefault();
-              } else if (e.key === 'Enter') {
-                if (selectedIndex >= 0) {
-                  window.open(items[selectedIndex].dataset.url, '_blank');
-                } else if (results.length > 0) {
-                  window.open(results[0].item.url, '_blank');
-                }
-              }
-            });
+              resultsContainer.innerHTML = results.slice(0, 10).map((result, index) => `
+                <div class="search-result-item" data-url="${result.item.url}" data-index="${index}">
+                  <span class="repo-name">${result.item.name}</span>
+                  <span class="repo-desc">${result.item.description || ''}</span>
+                </div>
+              `).join('');
+              resultsContainer.classList.add('active');
+            }
 
             function updateSelection(items) {
               items.forEach((item, index) => {
-                if (index === selectedIndex) {
-                  item.classList.add('selected');
+                const selected = index === selectedIndex;
+                item.classList.toggle('selected', selected);
+                if (selected) {
                   item.scrollIntoView({ block: 'nearest' });
-                } else {
-                  item.classList.remove('selected');
                 }
               });
             }
 
-            resultsContainer.addEventListener('click', (e) => {
-              const item = e.target.closest('.search-result-item');
-              if (item) {
-                window.open(item.dataset.url, '_blank');
+            function openSelectedOrFirst(items) {
+              if (selectedIndex >= 0) {
+                window.open(items[selectedIndex].dataset.url, '_blank');
+                return;
               }
+              if (results.length > 0) {
+                window.open(results[0].item.url, '_blank');
+              }
+            }
+
+            const keyHandlers = {
+              ArrowDown: (e, items) => {
+                selectedIndex = (selectedIndex + 1) % items.length;
+                updateSelection(items);
+                e.preventDefault();
+              },
+              ArrowUp: (e, items) => {
+                selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+                updateSelection(items);
+                e.preventDefault();
+              },
+              Enter: (_e, items) => {
+                openSelectedOrFirst(items);
+              },
+            };
+
+            searchInput.addEventListener('input', (e) => {
+              renderResults(e.target.value);
             });
 
-            // Hide results on click outside
-            document.addEventListener('click', (e) => {
-              if (!e.target.closest('.terminal-search-container')) {
-                resultsContainer.classList.remove('active');
+            searchInput.addEventListener('keydown', (e) => {
+              const handler = keyHandlers[e.key];
+              if (!handler) {
+                return;
               }
+              const items = resultsContainer.querySelectorAll('.search-result-item');
+              handler(e, items);
+            });
+
+            resultsContainer.addEventListener('click', (e) => {
+              const item = e.target.closest('.search-result-item');
+              if (!item) {
+                return;
+              }
+              window.open(item.dataset.url, '_blank');
+            });
+
+            document.addEventListener('click', (e) => {
+              if (e.target.closest('.terminal-search-container')) {
+                return;
+              }
+              resultsContainer.classList.remove('active');
             });
           });
         }
       ]
     }
   </script>
-  <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <!-- Plugins -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3.2.0/dist/index.min.js"></script>
 </body>
 </html>

@@ -15,8 +15,8 @@ Both are committed back to `main` by the GitHub Actions workflow on push, on a m
 
 `gh repo list` → `repos.json` → `src/generate.py` → renders `templates/*.j2` → writes `README.md` + `index.html`.
 
-- `repos.json` is the input data and is **gitignored** (regenerated each run). Don't commit it.
-- `main.py` is a leftover stub — entry point is `src/generate.py`.
+- `repos.json` is the input data and is **gitignored** (regenerated each run). Don't commit it. All `*.json` is gitignored — no JSON artefacts belong in the tree.
+- Entry point is `src/generate.py`. Run it via `mise run render` (or `uv run python src/generate.py`).
 - Categorization (in `categorize_repos`): first pass matches GitHub topics against per-category keywords; second pass falls back to repo name/description substring matches. The `go` category has a special-case to avoid matching the substring `go` in unrelated repos (requires `golang` or `go-`/`-go` boundaries). Adding a new language category means adding both an entry in `category_configs` and any name-heuristic exceptions.
 
 ## Common commands
