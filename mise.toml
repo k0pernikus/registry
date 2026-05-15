@@ -14,21 +14,22 @@ description = "Install Python dependencies via uv"
 run = "uv sync"
 
 [tasks.fetch]
-description = "Fetch GitHub repositories data (reuses repos.json if <30 days old; pass --force to refetch)"
-depends = ["sync"]
+description = "Fetch GitHub repositories data (reuses repos.json if <30 days old; pass --force-repo-download or -f to refetch)"
+depends = ["check"]
+usage = '''
+flag "-f --force-repo-download" help="Force re-download of repos.json"
+'''
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
 
 force=0
-for arg in "$@"; do
-    if [ "$arg" = "--force" ]; then
-        force=1
-    fi
-done
+if [ "${usage_force_repo_download:-false}" = "true" ]; then
+    force=1
+fi
 
 if [ "$force" -eq 0 ] && [ -f repos.json ] && [ -n "$(find repos.json -mtime -30 2>/dev/null)" ]; then
-    echo "repos.json fresh (<30 days), reusing. Pass --force to refetch."
+    echo "repos.json fresh (<30 days), reusing. Pass --force-repo-download (or -f) to refetch."
     exit 0
 fi
 
@@ -41,7 +42,10 @@ depends = ["fetch"]
 run = "uv run python src/generate.py --local"
 
 [tasks.generate]
-description = "Fetch and render"
+description = "Fetch (pass --force-repo-download or -f to refetch) and render"
+usage = '''
+flag "-f --force-repo-download" help="Force re-download of repos.json"
+'''
 depends = ["render"]
 
 [tasks.check]
