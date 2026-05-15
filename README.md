@@ -33,7 +33,6 @@ A curated list of my public repositories, automatically updated.
 | <a href="https://github.com/k0pernikus/allAnswersForQuora" target="_blank">`allAnswersForQuora`</a> | Chrome Extension that adds the `share=1` parameter for all the quora answers to be readable without having to register. |  |
 | <a href="https://github.com/k0pernikus/AmazingBreakout" target="_blank">`AmazingBreakout`</a> | Simple Java implementation of the Breakout game using the ACM Java libraries |  |
 | <a href="https://github.com/k0pernikus/AStar" target="_blank">`AStar`</a> | *No description provided.* |  |
-| <a href="https://github.com/k0pernikus/Better-fanfiction.net" target="_blank">`Better-fanfiction.net`</a> | Chrome Extension that tweaks fanfiction.net |  |
 | <a href="https://github.com/k0pernikus/big-damn-clock" target="_blank">`big-damn-clock`</a> | shows a large digital clock on a screen without any diversion |  |
 | <a href="https://github.com/k0pernikus/CurrencyConverter" target="_blank">`CurrencyConverter`</a> | Currency Converter supporting the European Central Bank XML |  |
 | <a href="https://github.com/k0pernikus/cv" target="_blank">`cv`</a> | Lebenslauf und Zeugnisse |  |
