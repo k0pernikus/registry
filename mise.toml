@@ -33,7 +33,7 @@ if [ "$force" -eq 0 ] && [ -f repos.json ] && [ -n "$(find repos.json -mtime -30
     exit 0
 fi
 
-gh repo list k0pernikus --visibility public --json name,description,url,repositoryTopics,isFork --limit 1000 > repos.json
+gh repo list k0pernikus --visibility public --no-archived --json name,description,url,repositoryTopics,isFork --limit 1000 | jq . > repos.json
 """
 
 [tasks.render]
@@ -42,10 +42,7 @@ depends = ["fetch"]
 run = "uv run python src/generate.py --local"
 
 [tasks.generate]
-description = "Fetch (pass --force-repo-download or -f to refetch) and render"
-usage = '''
-flag "-f --force-repo-download" help="Force re-download of repos.json"
-'''
+description = "Fetch and render"
 depends = ["render"]
 
 [tasks.check]
