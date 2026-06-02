@@ -81,6 +81,7 @@ A curated list of my public repositories, automatically updated.
 | Name | Description | Tags |
 | :--- | :--- | :--- |
 | <a href="https://github.com/k0pernikus/fizzbuzz_python" target="_blank">`fizzbuzz_python`</a> | *No description provided.* |  |
+| <a href="https://github.com/k0pernikus/reproduce-uv-19508" target="_blank">`reproduce-uv-19508`</a> | Minimal reproduction for astral-sh/uv#19508 |  |
 
 ### <i class="fa-solid fa-terminal"></i> Shell
 
