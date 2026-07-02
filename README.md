@@ -47,8 +47,10 @@ A curated list of my public repositories, automatically updated.
 | <a href="https://github.com/k0pernikus/jpc2015" target="_blank">`jpc2015`</a> | Sessionplan des JPC 2015 |  |
 | <a href="https://github.com/k0pernikus/k0pernikus.github.com" target="_blank">`k0pernikus.github.com`</a> | Github Page |  |
 | <a href="https://github.com/k0pernikus/lebenslauf" target="_blank">`lebenslauf`</a> | *No description provided.* |  |
+| <a href="https://github.com/k0pernikus/libvcs-whitespace-on-diff" target="_blank">`libvcs-whitespace-on-diff`</a> | Reproducable example for libvcs issue abot git diff not generating applicable patch | <repo-tag>bug</repo-tag> <repo-tag>reproduction</repo-tag> <repo-tag>libvcs</repo-tag>  |
 | <a href="https://github.com/k0pernikus/Little-Java-Password-Generator" target="_blank">`Little-Java-Password-Generator`</a> | Just for the fun of testing githb out |  |
 | <a href="https://github.com/k0pernikus/massmailer" target="_blank">`massmailer`</a> | *No description provided.* |  |
+| <a href="https://github.com/k0pernikus/mise-lockfile-different-platforms" target="_blank">`mise-lockfile-different-platforms`</a> | repo of lockfile back for http backend |  |
 | <a href="https://github.com/k0pernikus/pomodoro" target="_blank">`pomodoro`</a> | *No description provided.* |  |
 | <a href="https://github.com/k0pernikus/promise" target="_blank">`promise`</a> | For learning purpose: Working with promises. |  |
 | <a href="https://github.com/k0pernikus/PureSnake" target="_blank">`PureSnake`</a> | A simple snake clone written in PureBasic. |  |
