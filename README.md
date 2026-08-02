@@ -44,6 +44,7 @@ A curated list of my public repositories, automatically updated.
 | <a href="https://github.com/k0pernikus/github-cleanup-forks" target="_blank">`github-cleanup-forks`</a> | cleanup one's own github forks via gh |  |
 | <a href="https://github.com/k0pernikus/GraphTraversal" target="_blank">`GraphTraversal`</a> | Recursively traverse through "rooms" in a "cave". |  |
 | <a href="https://github.com/k0pernikus/hackingBoilerplate" target="_blank">`hackingBoilerplate`</a> | Preconfigured repo to allow for easy hacking without having to set up new enviroment |  |
+| <a href="https://github.com/k0pernikus/hk-partial-commit-index-lock-repro" target="_blank">`hk-partial-commit-index-lock-repro`</a> | *No description provided.* |  |
 | <a href="https://github.com/k0pernikus/jpc2015" target="_blank">`jpc2015`</a> | Sessionplan des JPC 2015 |  |
 | <a href="https://github.com/k0pernikus/k0pernikus.github.com" target="_blank">`k0pernikus.github.com`</a> | Github Page |  |
 | <a href="https://github.com/k0pernikus/lebenslauf" target="_blank">`lebenslauf`</a> | *No description provided.* |  |
@@ -51,6 +52,7 @@ A curated list of my public repositories, automatically updated.
 | <a href="https://github.com/k0pernikus/Little-Java-Password-Generator" target="_blank">`Little-Java-Password-Generator`</a> | Just for the fun of testing githb out |  |
 | <a href="https://github.com/k0pernikus/massmailer" target="_blank">`massmailer`</a> | *No description provided.* |  |
 | <a href="https://github.com/k0pernikus/mise-lockfile-different-platforms" target="_blank">`mise-lockfile-different-platforms`</a> | repo of lockfile back for http backend |  |
+| <a href="https://github.com/k0pernikus/moon-run-swallows-exit-codes" target="_blank">`moon-run-swallows-exit-codes`</a> | *No description provided.* |  |
 | <a href="https://github.com/k0pernikus/pomodoro" target="_blank">`pomodoro`</a> | *No description provided.* |  |
 | <a href="https://github.com/k0pernikus/promise" target="_blank">`promise`</a> | For learning purpose: Working with promises. |  |
 | <a href="https://github.com/k0pernikus/PureSnake" target="_blank">`PureSnake`</a> | A simple snake clone written in PureBasic. |  |
@@ -82,6 +84,7 @@ A curated list of my public repositories, automatically updated.
 
 | Name | Description | Tags |
 | :--- | :--- | :--- |
+| <a href="https://github.com/k0pernikus/actually" target="_blank">`actually`</a> | Well, actually - an opinionated Python linter and formatter: bans else and elif, allows only flat ternaries, enforces blank lines around return |  |
 | <a href="https://github.com/k0pernikus/fizzbuzz_python" target="_blank">`fizzbuzz_python`</a> | *No description provided.* |  |
 | <a href="https://github.com/k0pernikus/reproduce-uv-19508" target="_blank">`reproduce-uv-19508`</a> | Minimal reproduction for astral-sh/uv#19508 |  |
 
@@ -97,8 +100,10 @@ A curated list of my public repositories, automatically updated.
 | Name | Description | Tags |
 | :--- | :--- | :--- |
 | <a href="https://github.com/k0pernikus/commandLineTweeter" target="_blank">`commandLineTweeter`</a> | Sends tweets from command line. |  |
+| <a href="https://github.com/k0pernikus/flowmark-glfm-repro" target="_blank">`flowmark-glfm-repro`</a> | Minimal reproduction: GitLab Flavored Markdown (GLFM) constructs corrupted by a flowmark round-trip |  |
 | <a href="https://github.com/k0pernikus/golden-master-test" target="_blank">`golden-master-test`</a> | Example project showcasing the setup of a golden master test. It was created as a simplified howto for my hhjs (JavaScript usergroup of Hamburg) talk. It uses typescript and relies on nock for http recording. |  |
 | <a href="https://github.com/k0pernikus/httpSilexExample" target="_blank">`httpSilexExample`</a> | Demonstration of how to handle requests and responses using silex, esp. considering the error handling. |  |
+| <a href="https://github.com/k0pernikus/libvcs-non-utf8-on-diff" target="_blank">`libvcs-non-utf8-on-diff`</a> | Reproduction: libvcs Git.run() corrupts non-UTF-8 git output via backslashreplace decode; sibling of libvcs-whitespace-on-diff (vcs-python/libvcs#536) |  |
 | <a href="https://github.com/k0pernikus/MakePageBlue" target="_blank">`MakePageBlue`</a> | Example chrome extension that inserts jQuery into tabs in order to modify the DOM. |  |
 | <a href="https://github.com/k0pernikus/parallel-paratests" target="_blank">`parallel-paratests`</a> | paratest-not-testing-parallel |  |
 | <a href="https://github.com/k0pernikus/rubyPlayground" target="_blank">`rubyPlayground`</a> | just me messing about with ruby for me to grog its syntax |  |
